@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace CabInvoiceGeneratorBatch
 {
-    public class CabInvoiceGenerator
+    public class CabInvoiceGenerator : RideOption
     {
         RideRespository rideRespository = new RideRespository();
-        private readonly double cost_Per_KM = 10.0;
-        private readonly double cost_Per_Min = 1.0;
-        private readonly double min_Fare = 5.0;
+        RideOption rideOption = new RideOption();
         private double cabFare = 0.0;
         /// <summary>
         /// STEP 1 Calculate Fare
@@ -20,10 +18,13 @@ namespace CabInvoiceGeneratorBatch
         /// <param name="distance"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public double CalculateFare(double distance, double time)
+        public double CalculateFare(double distance, double time , RideType rideType) //pass enum
         {
-            this.cabFare = (distance * cost_Per_KM)+(time * cost_Per_Min);
-            return Math.Max(this.cabFare, min_Fare);
+            // call that method for the selection of ridetype and retuen value
+            RideOption option = rideOption.SetRideValue(rideType);
+            cabFare = (distance * option.cost_Per_KM)+(time * option.cost_Per_Mint);
+
+            return Math.Max(this.cabFare, option.min_Fare);
             // becuase the min fare is 5 means we get cabfare is 4 then it will be minimum fare is constant(5)
         }
         /// <summary>
@@ -31,12 +32,12 @@ namespace CabInvoiceGeneratorBatch
         /// </summary>
         /// <param name="rides"></param>
         /// <returns></returns>
-        public double GetMultipleRideFare(Ride[] rides)
+        public double GetMultipleRideFare(Ride[] rides,RideType rideType)
         {
             double totalRideFare = 0.0;
             foreach (Ride ride in rides)
             {
-                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
+                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime,rideType);
             }
             return totalRideFare;
         }
@@ -45,12 +46,12 @@ namespace CabInvoiceGeneratorBatch
         /// </summary>
         /// <param name="rides"></param>
         /// <returns></returns>
-        public EnhancedInvoiceSummary GetMultipleAverageFare(Ride[] rides)
+        public EnhancedInvoiceSummary GetMultipleAverageFare(Ride[] rides,RideType rideType)
         {
             double totalRideFare = 0.0;
             foreach (Ride ride in rides)
             {
-                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
+                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime,rideType);
             }
             return new EnhancedInvoiceSummary(totalRideFare, rides.Length);
         }
@@ -63,9 +64,9 @@ namespace CabInvoiceGeneratorBatch
         {
             rideRespository.AddCabRides(userId, rides);
         }
-        public EnhancedInvoiceSummary GetInvoiceSummary(string userId)
+        public EnhancedInvoiceSummary GetInvoiceSummary(string userId,RideType rideType)
         {
-            return this.GetMultipleAverageFare(this.rideRespository.GetCabRides(userId));
+            return this.GetMultipleAverageFare(this.rideRespository.GetCabRides(userId),rideType);
         }
     }
 }
