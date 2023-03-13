@@ -9,6 +9,7 @@ namespace CabInvoiceGeneratorBatch
 {
     public class CabInvoiceGenerator
     {
+        RideRespository rideRespository = new RideRespository();
         private readonly double cost_Per_KM = 10.0;
         private readonly double cost_Per_Min = 1.0;
         private readonly double min_Fare = 5.0;
@@ -52,6 +53,19 @@ namespace CabInvoiceGeneratorBatch
                 totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
             }
             return new EnhancedInvoiceSummary(totalRideFare, rides.Length);
+        }
+        /// <summary>
+        /// Step 4 Given userId And RideRespositories Return Invoice 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="rides"></param>
+        public void MapRidesTouse(string userId, Ride[] rides)
+        {
+            rideRespository.AddCabRides(userId, rides);
+        }
+        public EnhancedInvoiceSummary GetInvoiceSummary(string userId)
+        {
+            return this.GetMultipleAverageFare(this.rideRespository.GetCabRides(userId));
         }
     }
 }
