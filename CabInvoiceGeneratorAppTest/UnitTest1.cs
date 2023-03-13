@@ -4,6 +4,7 @@ namespace CabInvoiceGeneratorAppTest
     [TestClass]
     public class UnitTest1
     {
+        CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
         /// <summary>
         /// Step1 - Calculated Fare
         /// </summary>
@@ -12,9 +13,18 @@ namespace CabInvoiceGeneratorAppTest
         [TestMethod]
         public void GivenDistance_Time_ForSingleRide_ShouldReturnTotalFare(double distance,double time, double expectedValue)
         {
-            CabInvoiceGenerator cabInvoiceGenerator = new CabInvoiceGenerator();
             double totalFare = cabInvoiceGenerator.CalculateFare(distance, time);
             Assert.AreEqual(expectedValue, totalFare);
+        }
+        /// <summary>
+        /// (Step2) - Multiple Rides Calculate Total  
+        /// </summary>
+        [TestMethod]
+        public void GivenDistanceAndTimeForMultipleRide_WhenProper_shouldReturnAggregateFare()
+        {
+            Ride[] ride = { new Ride(3.0, 5.0), new Ride(2.0, 5.0) };
+            double invoiceSummary = cabInvoiceGenerator.GetMultipleRideFare(ride);
+            Assert.AreEqual(60.0, invoiceSummary);
         }
     }
 }

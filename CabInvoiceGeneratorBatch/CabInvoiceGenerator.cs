@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,21 @@ namespace CabInvoiceGeneratorBatch
         {
             this.cabFare = (distance * cost_Per_KM)+(time * cost_Per_Min);
             return Math.Max(this.cabFare, min_Fare);
+            // becuase the min fare is 5 means we get cabfare is 4 then it will be minimum fare is constant(5)
+        }
+        /// <summary>
+        /// Multiple Ride (step 2)
+        /// </summary>
+        /// <param name="rides"></param>
+        /// <returns></returns>
+        public double GetMultipleRideFare(Ride[] rides)
+        {
+            double totalRideFare = 0.0;
+            foreach (Ride ride in rides)
+            {
+                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
+            }
+            return totalRideFare;
         }
     }
 }
