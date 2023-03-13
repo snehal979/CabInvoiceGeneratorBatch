@@ -26,7 +26,7 @@ namespace CabInvoiceGeneratorBatch
             // becuase the min fare is 5 means we get cabfare is 4 then it will be minimum fare is constant(5)
         }
         /// <summary>
-        /// Multiple Ride (step 2)
+        ///  (step 2) Multiple Ride
         /// </summary>
         /// <param name="rides"></param>
         /// <returns></returns>
@@ -38,6 +38,20 @@ namespace CabInvoiceGeneratorBatch
                 totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
             }
             return totalRideFare;
+        }
+        /// <summary>
+        /// EnhancedInvoiceSummary Avergae fare (step 3)
+        /// </summary>
+        /// <param name="rides"></param>
+        /// <returns></returns>
+        public EnhancedInvoiceSummary GetMultipleAverageFare(Ride[] rides)
+        {
+            double totalRideFare = 0.0;
+            foreach (Ride ride in rides)
+            {
+                totalRideFare += CalculateFare(ride.rideDistance, ride.rideTime);
+            }
+            return new EnhancedInvoiceSummary(totalRideFare, rides.Length);
         }
     }
 }

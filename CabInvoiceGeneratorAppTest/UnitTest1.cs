@@ -26,5 +26,15 @@ namespace CabInvoiceGeneratorAppTest
             double invoiceSummary = cabInvoiceGenerator.GetMultipleRideFare(ride);
             Assert.AreEqual(60.0, invoiceSummary);
         }
+        /// <summary>
+        /// Step 3 -InvoiceSummary For Avergae Fare
+        /// </summary>
+        [TestMethod]
+        public void GivenDistanceAndTimeForMultipleRide_WhenProper_shouldReturnAvergaeFare()
+        {
+            Ride[] ride = { new Ride(3.0, 5.0), new Ride(2.0, 5.0) };
+            EnhancedInvoiceSummary invoiceSummary = this.cabInvoiceGenerator.GetMultipleAverageFare(ride);
+            Assert.AreEqual(60.0, invoiceSummary.totalFare);
+        }
     }
 }
